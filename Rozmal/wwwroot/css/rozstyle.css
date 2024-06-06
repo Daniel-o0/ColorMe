@@ -1,0 +1,134 @@
+﻿body {
+    background-image: url('../css/abstract-gray-oil-paint-textured-background.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+
+.title {
+    font-family: Impact, Charcoal, sans-serif;
+    color: #413f3f;
+}
+
+
+.firstLine {
+    display: flex;
+    align-items: flex-end;
+}
+
+
+.btnUpload {
+    color: black;
+    background-color: white;
+    cursor: pointer;
+    margin-left: 50px;
+    border: none;
+    font-size: 15px;
+    border-radius: 6px;
+    padding: 5px 11px;
+    transition: background-color 0.3s ease;
+}
+    .btnUpload:hover {
+        background-color: mintcream;
+    }
+
+
+#filePath {
+    height: 22px;
+    width: 200px;
+    margin-left: 10px;
+    margin-right: 577px;
+    cursor: not-allowed;
+    border: 1px solid black;
+    border-radius: 6px;
+}
+
+
+.btnDownload {
+    position: absolute;
+    right: 57px;
+    background-color: white;
+    color: black;
+    padding: 5px 11px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+    .btnDownload:hover {
+        background-color: mintcream;
+    }
+
+
+
+
+
+
+.line {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+
+.image-containers {
+    width: 450px;
+    height: 400px;
+    border: 1px solid black;
+}
+
+
+#imageContainer1 {
+    margin-top: 20px;
+    margin-left: 50px;
+}
+
+
+#imageContainer2 {
+    margin-top: 20px;
+    margin-left: 61px;
+}
+
+
+.box2-container {
+    width: 160px;
+    height: 100px;
+    margin-top: 35px;
+    margin-left: 40px;
+    margin-right: -30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid black;
+}
+
+
+#setting {
+    margin-top: 5px;
+    margin-left: 4px;
+}
+
+
+.radBtn1 {
+    margin-right: 25px;
+}
+
+
+.btnConvert {
+    margin-left: -120px;
+    margin-right: -20px;
+    margin-top: 225px;
+    padding: 10px 13px;
+    font-size: 15px;
+    color: white;
+    background-color: dimgray;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+    .btnConvert:hover {
+        background-color: gray;
+    }

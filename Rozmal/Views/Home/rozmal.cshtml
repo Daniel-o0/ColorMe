@@ -1,0 +1,179 @@
+﻿@page
+@model Rozmal.Views.Home.rozmalModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColorMe!</title>
+    <link rel="icon" type="image/jpeg" href="~/css/logo.jpg">
+    <link rel="stylesheet" href="/css/rozstyle.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-alpha1/html2canvas.min.js"></script>
+    <script src="https://docs.opencv.org/4.5.4/opencv.js"></script>
+</head>
+
+
+<body>
+    <main>
+    <h1 class="title">ColorMe!</h1>
+    
+        <div class="firstLine">
+            <button class="btnUpload" onclick="chooseFile()">Вибрати файл</button>
+            <input type="file" id="fileInput" style="display: none;" onchange="imageDisplay()" asp-for="file">
+            <input type="text" id="filePath" readonly>
+            <button class="btnDownload" onclick="downloadFinishedImage()">Завантажити</button>
+        </div>
+
+
+        <div class="line">
+
+            <div class="image-containers" id="imageContainer1">
+            </div>
+
+            <div class="box2-container">
+                        <h3 id="setting">Налаштування:</h3>
+                        <div class="radBtn1">
+                        <input id="radioBtn1" type="radio" name="choose" value="1" checked>
+                        <label for="radioBtn1">Звичайно</label>
+                        </div>
+                        <div>
+                          <input id="radioBtn2" type="radio" name="choose" value="2">
+                          <label for="radioBtn2">Деталізовано</label>
+                        </div>
+            </div>
+            <div>
+                <button class="btnConvert" onclick="imageProcessing()">Конвертувати</button>
+            </div>
+
+            <div class="image-containers" id="imageContainer2">
+            </div>
+
+        </div>
+    </main>
+
+
+
+    <script>
+        function chooseFile() {
+            const fileInput = document.getElementById('fileInput');
+            fileInput.click();
+        }
+
+
+
+        function imageDisplay() {
+            const fileInput = document.getElementById('fileInput');
+            const filePath = document.getElementById('filePath');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const imageContainer1 = document.getElementById('imageContainer1');
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.alt = 'Зображення';
+                    img.style.maxWidth = '100%';
+                    img.style.maxHeight = '100%';
+
+                    while (imageContainer1.firstChild) {
+                        imageContainer1.removeChild(imageContainer1.firstChild);
+                    }
+
+                    imageContainer1.appendChild(img);
+
+                    filePath.value = `${fileInput.files[0].name}`;
+                };
+
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+
+
+
+        
+
+        function chooseSetting() {
+            if (document.getElementById('radioBtn1').checked) {
+                sizeOfAreaInPixels = 9;
+                constant = 7;
+            } 
+
+            else if (document.getElementById('radioBtn2').checked) {
+                sizeOfAreaInPixels = 7;
+                constant = 2;
+            }
+        }
+
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', chooseSetting);
+        });
+
+
+
+
+        async function imageProcessing() {
+            chooseSetting();
+
+            const img = document.getElementById('imageContainer1').querySelector('img');
+            if (img && img.complete) {
+                const src = cv.imread(img);
+
+                //Adaptive Thresholding
+                const gray1 = new cv.Mat();
+                cv.cvtColor(src, gray1, cv.COLOR_RGBA2GRAY);
+                const thresh = new cv.Mat();
+                cv.adaptiveThreshold(gray1, thresh, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, sizeOfAreaInPixels, constant);
+
+                //Contour Detection
+                const gray2 = new cv.Mat();
+                cv.cvtColor(src, gray2, cv.COLOR_RGBA2GRAY);
+                const edges = new cv.Mat();
+                cv.Canny(gray2, edges, 70, 170, 3, false);
+                
+               
+                const invertedEdges = new cv.Mat();
+                cv.bitwise_not(edges, invertedEdges);
+
+
+                const combined = new cv.Mat();
+                cv.addWeighted(thresh, 0.4, invertedEdges, 0.6, 0, combined);
+
+
+                const canvas = document.createElement('canvas');
+                cv.imshow(canvas, combined);
+                const imageContainer2 = document.getElementById('imageContainer2');
+                imageContainer2.innerHTML = '';
+                imageContainer2.appendChild(canvas);
+
+                src.delete(); gray1.delete(); gray2.delete(); thresh.delete(); edges.delete(); invertedEdges.delete(); combined.delete();
+            }
+        }
+        
+
+
+
+        function downloadFinishedImage() {
+            const imageContainer2 = document.getElementById('imageContainer2');
+            const canvas = imageContainer2.querySelector('canvas');
+
+            
+            if (canvas) {
+                const originalFileName = document.getElementById('filePath').value;
+                const newFileName = originalFileName.split('.').shift() + '_ColorMe!.png';
+                const link = document.createElement('a');
+
+                link.download = newFileName;
+                link.href = canvas.toDataURL('image/png');
+
+                
+                document.body.appendChild(link);
+                link.click();
+
+                document.body.removeChild(link);
+            }
+        }
+    </script>
+</body>
+</html>

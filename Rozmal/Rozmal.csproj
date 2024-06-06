@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\rozstyle.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="D:\rozmal_last.cshtml.cs" Link="rozmal_last.cshtml.cs" />
+    <Content Include="D:\НАВЧАННЯ 2 курс\2 сем\Курсова\Copy html file for Rozmal.cshtml" Link="Copy html file for Rozmal.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EmmetNetSharp" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\" />
+  </ItemGroup>
+
+</Project>
